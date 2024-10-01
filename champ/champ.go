@@ -3,6 +3,6 @@ package champ
 import "main/trait"
 
 type Champ struct {
-	Name  string
+	Name   string
 	Traits []trait.Trait
 }

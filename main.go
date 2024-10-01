@@ -4,203 +4,276 @@ import (
 	"fmt"
 	"main/champ"
 	"main/trait"
-	"math/rand"
-	"time"
+	"math/rand/v2"
 )
 
 type T = trait.Trait
+type B = trait.Buff
 type C = champ.Champ
 
 var (
-    fated      = T{Name:"Fated", MinCount: 3, Weight: 2}
-    sniper      = T{Name: "Sniper", MinCount: 2, Weight: 2}
-    umbral      = T{Name: "Umbral", MinCount: 2, Weight: 2}
-    warden      = T{Name: "Warden", MinCount: 2, Weight: 2}
-    invoker     = T{Name: "Invoker", MinCount: 2, Weight: 2}
-    dryad       = T{Name: "Dryad", MinCount: 2, Weight: 2}
-    trickshot   = T{Name: "Trickshot", MinCount: 2, Weight: 2}
-    porcelain   = T{Name: "Porcelain", MinCount: 2, Weight: 2}
-    dragonlord  = T{Name: "Dragonlord", MinCount: 2, Weight: 2}
-    sage        = T{Name: "Sage", MinCount: 2, Weight: 2}
-    arcanist    = T{Name: "Arcanist", MinCount: 2, Weight: 2}
-    ghostly     = T{Name: "Ghostly", MinCount: 2, Weight: 2}
-    altruist    = T{Name: "Altruist", MinCount: 2, Weight: 2}
-    heavenly    = T{Name: "Heavenly", MinCount: 2, Weight: 2}
-    bruiser     = T{Name: "Bruiser", MinCount: 2, Weight: 2}
-    mythic      = T{Name: "Mythic", MinCount: 3, Weight: 2}
-    behemoth    = T{Name: "Behemoth", MinCount: 2, Weight: 2}
-    duelist     = T{Name: "Duelist", MinCount: 2, Weight: 2}
-    fortune     = T{Name: "Fortune", MinCount: 3, Weight: 2}
-    inkshadow   = T{Name: "Inkshadow", MinCount: 3, Weight: 2}
-    reaper      = T{Name: "Reaper", MinCount: 2, Weight: 2}
-    storyweaver = T{Name: "Storyweaver", MinCount: 3, Weight: 2}
-    artist      = T{Name: "Artist", MinCount: 2, Weight: 2}
-    lovers      = T{Name: "Lovers", MinCount: 1, Weight: 2}
-    spiritWalker = T{Name: "SpiritWalker", MinCount: 1, Weight: 2}
-    greatSage   = T{Name: "Great Sage", MinCount: 2, Weight: 2}
+	arcana       = T{Name: "Arcana", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 3, Weight: 3}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 5, Weight: 5}}}
+	ascendant    = T{Name: "Ascendant", Buffs: []B{{MinChampsCount: 1, Weight: 3}}}
+	bastion      = T{Name: "Bastion", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}, {MinChampsCount: 8, Weight: 8}}}
+	batqueen     = T{Name: "BatQueen", Buffs: []B{{MinChampsCount: 1, Weight: 2}}}
+	blaster      = T{Name: "Blaster", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}}}
+	chrono       = T{Name: "Chrono", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}}}
+	dragon       = T{Name: "Dragon", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 3, Weight: 3}}}
+	druid        = T{Name: "Druid", Buffs: []B{{MinChampsCount: 1, Weight: 2}}}
+	eldritch     = T{Name: "Eldritch", Buffs: []B{{MinChampsCount: 3, Weight: 3}, {MinChampsCount: 5, Weight: 5}, {MinChampsCount: 7, Weight: 7}, {MinChampsCount: 10, Weight: 10}}}
+	bestFriends  = T{Name: "BestFriends", Buffs: []B{{MinChampsCount: 1, Weight: 1}}}
+	faerie       = T{Name: "Faerie", Buffs: []B{{MinChampsCount: 3, Weight: 3}, {MinChampsCount: 5, Weight: 5}, {MinChampsCount: 7, Weight: 7}, {MinChampsCount: 9, Weight: 9}}}
+	frost        = T{Name: "Frost", Buffs: []B{{MinChampsCount: 3, Weight: 3}, {MinChampsCount: 5, Weight: 5}, {MinChampsCount: 7, Weight: 7}, {MinChampsCount: 9, Weight: 9}}}
+	honeymancy   = T{Name: "Honeymancy", Buffs: []B{{MinChampsCount: 3, Weight: 3}, {MinChampsCount: 5, Weight: 5}, {MinChampsCount: 7, Weight: 7}}}
+	hunter       = T{Name: "Hunter", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}}}
+	incantor     = T{Name: "Incantor", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}}}
+	mage         = T{Name: "Mage", Buffs: []B{{MinChampsCount: 3, Weight: 3}, {MinChampsCount: 5, Weight: 5}, {MinChampsCount: 7, Weight: 7}, {MinChampsCount: 9, Weight: 9}}}
+	multistriker = T{Name: "Multistriker", Buffs: []B{{MinChampsCount: 3, Weight: 3}, {MinChampsCount: 5, Weight: 5}, {MinChampsCount: 7, Weight: 7}, {MinChampsCount: 9, Weight: 9}}}
+	portal       = T{Name: "Portal", Buffs: []B{{MinChampsCount: 3, Weight: 3}, {MinChampsCount: 6, Weight: 6}, {MinChampsCount: 8, Weight: 8}, {MinChampsCount: 10, Weight: 10}}}
+	preserver    = T{Name: "Preserver", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 3, Weight: 3}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 5, Weight: 5}}}
+	pyro         = T{Name: "Pyro", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 3, Weight: 3}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 5, Weight: 5}}}
+	ravenous     = T{Name: "Ravenous", Buffs: []B{{MinChampsCount: 1, Weight: 1}}}
+	scholar      = T{Name: "Scholar", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}}}
+	shapeshifter = T{Name: "Shapeshifter", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}, {MinChampsCount: 8, Weight: 8}}}
+	sugarcraft   = T{Name: "Sugarcraft", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}}}
+	vanguard     = T{Name: "Vanguard", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}}}
+	warrior      = T{Name: "Warrior", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}}}
+	witchcraft   = T{Name: "Witchcraft", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}, {MinChampsCount: 8, Weight: 8}}}
 )
 
 var (
-    ahri      = C{Name: "Ahri", Traits: []T{arcanist, fated}}
-    caitlyn   = C{Name: "Caitlyn", Traits: []T{ghostly, sniper}}
-    chogath   = C{Name: "Cho'Gath", Traits: []T{behemoth, mythic}}
-    darius    = C{Name: "Darius", Traits: []T{duelist, umbral}}
-    garen     = C{Name: "Garen", Traits: []T{storyweaver, warden}}
-    jax       = C{Name: "Jax", Traits: []T{inkshadow, warden}}
-    khazix    = C{Name: "Kha'Zix", Traits: []T{heavenly, reaper}}
-    kobuko    = C{Name: "Kobuko", Traits: []T{bruiser, fortune}}
-    kogmaw    = C{Name: "Kog'Maw", Traits: []T{invoker,mythic, sniper}}
-    malphite  = C{Name: "Malphite", Traits: []T{behemoth, heavenly}}
-    reksai    = C{Name: "Rek'Sai", Traits: []T{bruiser, dryad}}
-    sivir     = C{Name: "Sivir", Traits: []T{storyweaver, trickshot}}
-    yasuo     = C{Name: "Yasuo", Traits: []T{duelist, fated}}
+	ashe       = C{Name: "Ashe", Traits: []T{eldritch, multistriker}}
+	blitzcrank = C{Name: "Blitzcrank", Traits: []T{vanguard, honeymancy}}
+	elise      = C{Name: "Elise", Traits: []T{eldritch, shapeshifter}}
+	jax        = C{Name: "Jax", Traits: []T{chrono, multistriker}}
+	jayce      = C{Name: "Jayce", Traits: []T{shapeshifter, portal}}
+	lillia     = C{Name: "Lillia", Traits: []T{bastion, faerie}}
+	nomsy      = C{Name: "Nomsy", Traits: []T{hunter, dragon}}
+	poppy      = C{Name: "Poppy", Traits: []T{witchcraft, bastion}}
+	seraphine  = C{Name: "Seraphine", Traits: []T{mage, faerie}}
+	soraka     = C{Name: "Soraka", Traits: []T{mage, sugarcraft}}
+	twitch     = C{Name: "Twitch", Traits: []T{frost, hunter}}
+	warwick    = C{Name: "Warwick", Traits: []T{frost, vanguard}}
+	ziggs      = C{Name: "Ziggs", Traits: []T{honeymancy, incantor}}
+	zoe        = C{Name: "Zoe", Traits: []T{witchcraft, scholar, portal}}
 
-	aatrox  = C{Name: "Aatrox", Traits: []T{bruiser, ghostly, inkshadow}}
-	gnar    = C{Name: "Gnar", Traits: []T{dryad, warden}}
-	janna   = C{Name: "Janna", Traits: []T{dragonlord, invoker}}
-	kindred = C{Name: "Kindred", Traits: []T{dryad, fated, reaper}}
-	lux     = C{Name: "Lux", Traits: []T{arcanist, porcelain}}
-	neeko   = C{Name: "Neeko", Traits: []T{arcanist, heavenly, mythic}}
-	qiyana  = C{Name: "Qiyana", Traits: []T{duelist, heavenly}}
-	riven   = C{Name: "Riven", Traits: []T{altruist, bruiser, storyweaver}}
-	senna   = C{Name: "Senna", Traits: []T{inkshadow, sniper}}
-	shen    = C{Name: "Shen", Traits: []T{behemoth, ghostly}}
-	teemo   = C{Name: "Teemo", Traits: []T{fortune, trickshot}}
-	yorick  = C{Name: "Yorick", Traits: []T{behemoth, umbral}}
-	zyra    = C{Name: "Zyra", Traits: []T{sage, storyweaver}}
+	ahri       = C{Name: "Ahri", Traits: []T{scholar, arcana}}
+	akali      = C{Name: "Akali", Traits: []T{warrior, multistriker, pyro}}
+	cassiopeia = C{Name: "Cassiopeia", Traits: []T{witchcraft, incantor}}
+	galio      = C{Name: "Galio", Traits: []T{vanguard, mage, portal}}
+	kassadin   = C{Name: "Kassadin", Traits: []T{multistriker, portal}}
+	kogmaw     = C{Name: "Kog'Maw", Traits: []T{hunter, honeymancy}}
+	nilah      = C{Name: "Nilah", Traits: []T{warrior, eldritch}}
+	nunu       = C{Name: "Nunu", Traits: []T{bastion, honeymancy}}
+	rumble     = C{Name: "Rumble", Traits: []T{blaster, sugarcraft, vanguard}}
+	shyvana    = C{Name: "Shyvana", Traits: []T{shapeshifter, dragon}}
+	syndra     = C{Name: "Syndra", Traits: []T{incantor, eldritch}}
+	tristana   = C{Name: "Tristana", Traits: []T{blaster, faerie}}
+	zilean     = C{Name: "Zilean", Traits: []T{preserver, frost, chrono}}
 
-	alune     = C{Name: "Alune", Traits: []T{invoker, umbral}}
-	amumu     = C{Name: "Amumu", Traits: []T{porcelain, warden}}
-	aphelios  = C{Name: "Aphelios", Traits: []T{fated, sniper}}
-	bard      = C{Name: "Bard", Traits: []T{mythic, trickshot}}
-	diana     = C{Name: "Diana", Traits: []T{dragonlord, sage}}
-	illaoi    = C{Name: "Illaoi", Traits: []T{arcanist, ghostly, warden}}
-	soraka    = C{Name: "Soraka", Traits: []T{altruist, heavenly}}
-	tahmKench = C{Name: "Tahm Kench", Traits: []T{bruiser, mythic}}
-	thresh    = C{Name: "Thresh", Traits: []T{behemoth, fated}}
-	tristana  = C{Name: "Tristana", Traits: []T{duelist, fortune}}
-	volibear  = C{Name: "Volibear", Traits: []T{duelist, inkshadow}}
-	yone      = C{Name: "Yone", Traits: []T{reaper, umbral}}
-	zoe       = C{Name: "Zoe", Traits: []T{arcanist, fortune, storyweaver}}
+	bard        = C{Name: "Bard", Traits: []T{scholar, preserver, sugarcraft}}
+	ezreal      = C{Name: "Ezreal", Traits: []T{blaster, portal}}
+	hecarim     = C{Name: "Hecarim", Traits: []T{multistriker, bastion, arcana}}
+	hwei        = C{Name: "Hwei", Traits: []T{blaster, frost}}
+	jinx        = C{Name: "Jinx", Traits: []T{hunter, sugarcraft}}
+	katarina    = C{Name: "Katarina", Traits: []T{warrior, faerie}}
+	mordekaiser = C{Name: "Mordekaiser", Traits: []T{vanguard, eldritch}}
+	neeko       = C{Name: "Neeko", Traits: []T{witchcraft, shapeshifter}}
+	shen        = C{Name: "Shen", Traits: []T{bastion, pyro}}
+	swain       = C{Name: "Swain", Traits: []T{shapeshifter, frost}}
+	veigar      = C{Name: "Veigar", Traits: []T{mage, honeymancy}}
+	vex         = C{Name: "Vex", Traits: []T{mage, chrono}}
+	wukong      = C{Name: "Wukong", Traits: []T{druid}}
 
-	annie     = C{Name: "Annie", Traits: []T{fortune, invoker}}
-	ashe      = C{Name: "Ashe", Traits: []T{porcelain, sniper}}
-	galio     = C{Name: "Galio", Traits: []T{bruiser, storyweaver}}
-	kaisa     = C{Name: "Kai'Sa", Traits: []T{inkshadow, trickshot}}
-	kayn      = C{Name: "Kayn", Traits: []T{ghostly, reaper}}
-	leeSin    = C{Name: "Lee Sin", Traits: []T{dragonlord, duelist}}
-	lillia    = C{Name: "Lillia", Traits: []T{invoker, mythic}}
-	morgana   = C{Name: "Morgana", Traits: []T{ghostly, sage}}
-	nautilus  = C{Name: "Nautilus", Traits: []T{mythic, warden}}
-	ornn      = C{Name: "Ornn", Traits: []T{behemoth, dryad}}
-	sylas     = C{Name: "Sylas", Traits: []T{bruiser, umbral}}
-	syndra    = C{Name: "Syndra", Traits: []T{arcanist, fated}}
+	fiora     = C{Name: "Fiora", Traits: []T{witchcraft, warrior}}
+	gwen      = C{Name: "Gwen", Traits: []T{warrior, sugarcraft}}
+	kalista   = C{Name: "Kalista", Traits: []T{multistriker, faerie}}
+	karma     = C{Name: "Karma", Traits: []T{incantor, chrono}}
+	nami      = C{Name: "Nami", Traits: []T{mage, eldritch}}
+	nasus     = C{Name: "Nasus", Traits: []T{shapeshifter, pyro}}
+	olaf      = C{Name: "Olaf", Traits: []T{hunter, frost}}
+	rakan     = C{Name: "Rakan", Traits: []T{preserver, faerie}}
+	ryze      = C{Name: "Ryze", Traits: []T{scholar, portal}}
+	tahmkench = C{Name: "Tahm Kench", Traits: []T{vanguard, arcana}}
+	taric     = C{Name: "Taric", Traits: []T{bastion, portal}}
+	varus     = C{Name: "Varus", Traits: []T{blaster, pyro}}
 
-	azir      = C{Name: "Azir", Traits: []T{dryad, invoker}}
-	hwei      = C{Name: "Hwei", Traits: []T{artist, mythic}}
-	irelia    = C{Name: "Irelia", Traits: []T{duelist, storyweaver}}
-	lissandra = C{Name: "Lissandra", Traits: []T{arcanist, porcelain}}
-	rakan     = C{Name: "Rakan", Traits: []T{altruist, dragonlord, lovers}}
-	sett      = C{Name: "Sett", Traits: []T{fated, umbral, warden}}
-	udyr      = C{Name: "Udyr", Traits: []T{behemoth, inkshadow, spiritWalker}}
-	wukong    = C{Name: "WuKong", Traits: []T{greatSage, heavenly}}
-	xayah     = C{Name: "Xayah", Traits: []T{dragonlord, trickshot, lovers}}
+	briar   = C{Name: "Briar", Traits: []T{shapeshifter, ravenous, eldritch}}
+	camille = C{Name: "Camille", Traits: []T{multistriker, chrono}}
+	diana   = C{Name: "Diana", Traits: []T{bastion, frost}}
+	milio   = C{Name: "Milio", Traits: []T{scholar, faerie}}
+	morgana = C{Name: "Morgana", Traits: []T{witchcraft, preserver, batqueen}}
+	norra   = C{Name: "Norra", Traits: []T{bestFriends, mage, portal}}
+	smolder = C{Name: "Smolder", Traits: []T{blaster, dragon}}
+	xerath  = C{Name: "Xerath", Traits: []T{ascendant, arcana}}
 )
 
 var champs = []C{
-	ahri, caitlyn,  chogath, darius, garen, jax, khazix, kobuko, kogmaw, malphite, reksai, sivir, yasuo, aatrox, gnar, janna, kindred, lux, neeko, qiyana, riven, senna, shen, teemo, yorick, zyra, alune, amumu, aphelios, bard, diana, illaoi, soraka, tahmKench, thresh, tristana, volibear, yone, zoe, annie, ashe, galio, kaisa, kayn, leeSin, lillia, morgana, nautilus, ornn, sylas, syndra, azir, hwei, irelia, lissandra, rakan, sett, udyr, wukong, xayah,
+	ashe,
+	blitzcrank,
+	elise,
+	jax,
+	jayce,
+	lillia,
+	nomsy,
+	poppy,
+	seraphine,
+	soraka,
+	twitch,
+	warwick,
+	ziggs,
+	zoe,
+	ahri,
+	akali,
+	cassiopeia,
+	galio,
+	kassadin,
+	kogmaw,
+	nilah,
+	nunu,
+	rumble,
+	shyvana,
+	syndra,
+	tristana,
+	zilean,
+	bard,
+	ezreal,
+	hecarim,
+	hwei,
+	jinx,
+	katarina,
+	mordekaiser,
+	neeko,
+	shen,
+	swain,
+	veigar,
+	vex,
+	wukong,
+	fiora,
+	gwen,
+	kalista,
+	karma,
+	nami,
+	nasus,
+	olaf,
+	rakan,
+	ryze,
+	tahmkench,
+	taric,
+	varus,
+	briar,
+	camille,
+	diana,
+	milio,
+	morgana,
+	norra,
+	smolder,
+	xerath,
 }
 
-var rng = rand.New(rand.NewSource(time.Now().UnixNano()))
-
 func random(min, max int) int {
-    return rng.Intn(max - min + 1) + min
+	return rand.IntN(max-min+1) + min
 }
 
 const teamSize = 8
 
-func a() (activeTraits []string, team []C) {
-    team = []C{}
-    teamMap := make(map[string]bool)
-    for _, champ := range team {
-        teamMap[champ.Name] = true
-    }
+func GetTeam() []C {
+	team := []C{}
+	champsCopy := make([]C, len(champs))
 
-    copy := make([]C, 0)
-    for _, champ := range champs {
-        if !teamMap[champ.Name] {
-            copy = append(copy, champ)
-        }
-    }
+	copy(champsCopy, champs)
 
-    hasRakan := false
-    hasXayah := false
+	// teamMap := make(map[string]bool)
+	// for _, champ := range team {
+	// 	teamMap[champ.Name] = true
+	// }
 
-    for i := len(team); i < teamSize; i++ {
-        randomNum := random(0, len(copy)-1)
-        curr := copy[randomNum]
+	// champsCopy := make([]C, 0)
+	// for _, champ := range champs {
+	// 	if !teamMap[champ.Name] {
+	// 		champsCopy = append(champsCopy, champ)
+	// 	}
+	// }
 
-        if (curr.Name == "Rakan" && hasXayah) || (curr.Name == "Xayah" && hasRakan) {
-            i--
-            continue
-        }
+	for i := 0; i < teamSize; i++ {
+		randomNum := random(0, len(champsCopy)-1)
+		curr := champsCopy[randomNum]
+		team = append(team, curr)
+		champsCopy = append(champsCopy[:randomNum], champsCopy[randomNum+1:]...)
+	}
 
-        team = append(team, curr)
+	return team
+}
 
-        if curr.Name == "Rakan" {
-            hasRakan = true
-        } else if curr.Name == "Xayah" {
-            hasXayah = true
-        }
-
-        copy = append(copy[:randomNum], copy[randomNum+1:]...)
-    }
-
-    traits := make(map[string]*struct {
-        count    int
-        isActive bool
-    })
-
-    for _, champ := range team {
-        for _, trait := range champ.Traits {
-            if _, ok := traits[trait.Name]; !ok {
-                traits[trait.Name] = &struct {
-                    count    int
-                    isActive bool
-                }{1, trait.IsActive(1)}
-            } else {
-                traits[trait.Name].count++
-                traits[trait.Name].isActive = trait.IsActive(traits[trait.Name].count)
-            }
-        }
-    }
-
-    for trait, t := range traits {
-        if t.isActive {
-            activeTraits = append(activeTraits, trait)
-        }
-    }
-
-    return
+type TraitMap struct {
+	count    int
+	isActive bool
+	weight   int
 }
 
 func main() {
-    var bestTeam []C
-    var traits []string
+	bestTeams := [][]C{}
+	bestWeights := []int{}
+	bestTraits := [][]string{}
 
-    for i := 0; i < 1000000; i++ {
-        activeTraits, team := a()
+	// var wg sync.WaitGroup
+	// numGoroutines := 10
 
-        if len(activeTraits) > len(traits) {
-            traits = activeTraits
-            bestTeam = team
-        }
-    }
+	// for j := 0; j < numGoroutines; j++ {
+	// wg.Add(1)
+	// go func(id int) {
+	// defer wg.Done()
 
-    bestTeamNames := make([]string, len(bestTeam))
-    for i, champ := range bestTeam {
-        bestTeamNames[i] = champ.Name
-    }
+	for i := 0; i < 1000000; i++ {
+		// team := []C{akali, ahri, ashe, hecarim, jax, camille, kassadin, xerath}
+		team := GetTeam()
+		traits := make(map[string]TraitMap)
+		currWeight := 0
 
-    fmt.Println(bestTeamNames, traits)
+		for _, champ := range team {
+			for _, trait := range champ.Traits {
+				newCount := traits[trait.Name].count + 1
+				traits[trait.Name] = TraitMap{
+					count:    newCount,
+					isActive: trait.IsActive(newCount),
+					weight:   trait.ActiveBuff(newCount).Weight,
+				}
+			}
+		}
+
+		for _, value := range traits {
+			currWeight += value.weight
+		}
+
+		if currWeight > 18 {
+			bestTeams = append(bestTeams, team)
+			bestWeights = append(bestWeights, currWeight)
+			traitsHolder := []string{}
+
+			for key := range traits {
+				if traits[key].isActive {
+					traitsHolder = append(traitsHolder, key)
+				}
+			}
+
+			bestTraits = append(bestTraits, traitsHolder)
+		}
+	}
+
+	// }(j)
+	// }
+
+	// wg.Wait()
+
+	for i, team := range bestTeams {
+		bestTeamNames := make([]string, teamSize)
+
+		for i, champ := range team {
+			bestTeamNames[i] = champ.Name
+		}
+
+		// fmt.Println(bestTraits)
+		fmt.Println(bestTeamNames, bestTraits[i], bestWeights[i])
+
+	}
 }

@@ -1,41 +1,62 @@
 package trait
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestTrait(t *testing.T) {
-	t.Run("A trait struct is created", func(t *testing.T) {
-		got := Trait{Name:"Test Trait", MinCount: 2}
-		wantName := "Test Trait"
-		wantMinCount := 2
+	buff1 := Buff{MinChampsCount: 2, Weight: 2}
+	buff2 := Buff{MinChampsCount: 3, Weight: 3}
+	buff3 := Buff{MinChampsCount: 5, Weight: 5}
 
-		if got.Name != wantName {
-			t.Errorf("got %s want %s", got.Name, wantName)
-		}
+	t.Run("A trait is not active", func(t *testing.T) {
+		trait := Trait{Name: "Test Trait", Buffs: []Buff{buff1, buff2}}
+		got := trait.IsActive(1)
+		want := false
 
-		if got.MinCount != wantMinCount {
-			t.Errorf("got %d want %d", got.MinCount, wantMinCount)
+		if got != want {
+			t.Errorf("got %v want %v", got, want)
 		}
 	})
 
-	t.Run("Trait is active when count is greater than or equal to MinCount", func(t *testing.T) {
-		trait := Trait{Name: "Test Trait", MinCount: 2}
-
+	t.Run("Trait is active when count is equal to the min champ count", func(t *testing.T) {
+		trait := Trait{Name: "Test Trait", Buffs: []Buff{buff1, buff2}}
 		got := trait.IsActive(2)
 		want := true
 
 		if got != want {
-			t.Errorf("got %t want %t", got, want)
+			t.Errorf("got %v want %v", got, want)
 		}
 	})
 
-	t.Run("Trait is not active when count is smaller than MinCount", func(t *testing.T) {
-		trait := Trait{Name: "Test Trait", MinCount: 4}
-
-		got := trait.IsActive(2)
-		want := false
+	t.Run("Trait is active when count is bigger than the min champ count", func(t *testing.T) {
+		trait := Trait{Name: "Test Trait", Buffs: []Buff{buff1, buff2}}
+		got := trait.IsActive(5)
+		want := true
 
 		if got != want {
-			t.Errorf("got %t want %t", got, want)
+			t.Errorf("got %v want %v", got, want)
+		}
+	})
+
+	t.Run("Should get the lowest value buff", func(t *testing.T) {
+		trait := Trait{Name: "Test Trait", Buffs: []Buff{buff1, buff2}}
+		got := trait.ActiveBuff(2)
+		want := buff1
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v want %v", got, want)
+		}
+	})
+
+	t.Run("Should get the highest value buff", func(t *testing.T) {
+		trait := Trait{Name: "Test Trait", Buffs: []Buff{buff1, buff2, buff3}}
+		got := trait.ActiveBuff(5)
+		want := buff3
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v want %v", got, want)
 		}
 	})
 }
