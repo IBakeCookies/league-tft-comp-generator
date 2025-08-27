@@ -5,6 +5,7 @@ import (
 	"main/champ"
 	"main/trait"
 	"math/rand/v2"
+	"sync"
 )
 
 type T = trait.Trait
@@ -12,7 +13,12 @@ type B = trait.Buff
 type C = champ.Champ
 
 var (
-	arcana       = T{Name: "Arcana", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 3, Weight: 3}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 5, Weight: 5}}}
+	arcana = T{
+		Name: "Arcana",
+		Buffs: []B{{MinChampsCount: 2, Weight: 2},
+			{MinChampsCount: 3, Weight: 3},
+			{MinChampsCount: 4, Weight: 4},
+			{MinChampsCount: 5, Weight: 5}}}
 	ascendant    = T{Name: "Ascendant", Buffs: []B{{MinChampsCount: 1, Weight: 3}}}
 	bastion      = T{Name: "Bastion", Buffs: []B{{MinChampsCount: 2, Weight: 2}, {MinChampsCount: 4, Weight: 4}, {MinChampsCount: 6, Weight: 6}, {MinChampsCount: 8, Weight: 8}}}
 	batqueen     = T{Name: "BatQueen", Buffs: []B{{MinChampsCount: 1, Weight: 2}}}
@@ -216,54 +222,53 @@ func main() {
 	bestWeights := []int{}
 	bestTraits := [][]string{}
 
-	// var wg sync.WaitGroup
-	// numGoroutines := 10
+	wg := sync.WaitGroup{}
+	numGoroutines := 10
 
-	// for j := 0; j < numGoroutines; j++ {
-	// wg.Add(1)
-	// go func(id int) {
-	// defer wg.Done()
+	for j := 0; j < numGoroutines; j++ {
+		wg.Add(1)
+		go func() {
+			for i := 0; i < 400000; i++ {
+				// team := []C{akali, ahri, ashe, hecarim, jax, camille, kassadin, xerath}
+				team := GetTeam()
+				traits := make(map[string]TraitMap)
+				currWeight := 0
 
-	for i := 0; i < 1000000; i++ {
-		// team := []C{akali, ahri, ashe, hecarim, jax, camille, kassadin, xerath}
-		team := GetTeam()
-		traits := make(map[string]TraitMap)
-		currWeight := 0
+				for _, champ := range team {
+					for _, trait := range champ.Traits {
+						newCount := traits[trait.Name].count + 1
+						traits[trait.Name] = TraitMap{
+							count:    newCount,
+							isActive: trait.IsActive(newCount),
+							weight:   trait.ActiveBuff(newCount).Weight,
+						}
+					}
+				}
 
-		for _, champ := range team {
-			for _, trait := range champ.Traits {
-				newCount := traits[trait.Name].count + 1
-				traits[trait.Name] = TraitMap{
-					count:    newCount,
-					isActive: trait.IsActive(newCount),
-					weight:   trait.ActiveBuff(newCount).Weight,
+				for _, value := range traits {
+					currWeight += value.weight
+				}
+
+				if currWeight > 19 {
+					bestTeams = append(bestTeams, team)
+					bestWeights = append(bestWeights, currWeight)
+					traitsHolder := []string{}
+
+					for key := range traits {
+						if traits[key].isActive {
+							traitsHolder = append(traitsHolder, key)
+						}
+					}
+
+					bestTraits = append(bestTraits, traitsHolder)
 				}
 			}
-		}
 
-		for _, value := range traits {
-			currWeight += value.weight
-		}
-
-		if currWeight > 18 {
-			bestTeams = append(bestTeams, team)
-			bestWeights = append(bestWeights, currWeight)
-			traitsHolder := []string{}
-
-			for key := range traits {
-				if traits[key].isActive {
-					traitsHolder = append(traitsHolder, key)
-				}
-			}
-
-			bestTraits = append(bestTraits, traitsHolder)
-		}
+			wg.Done()
+		}()
 	}
 
-	// }(j)
-	// }
-
-	// wg.Wait()
+	wg.Wait()
 
 	for i, team := range bestTeams {
 		bestTeamNames := make([]string, teamSize)
